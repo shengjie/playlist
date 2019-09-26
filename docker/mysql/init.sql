@@ -1,25 +1,25 @@
-CREATE TABLE video {
+CREATE TABLE video (
    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
    title VARCHAR(255) NOT NULL,
    thumbnail VARCHAR(255) NOT NULL,
    created_at INT NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at INT NOT NULL,
    PRIMARY KEY(id)
-}
+);
 
-CREATE TABLE playlist {
+CREATE TABLE playlist (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   created_at INT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at INT NOT NULL,
   PRIMARY KEY(id)
-}
+);
 
-CREATE TABLE playlist_video {
+CREATE TABLE playlist_video (
   playlist_id INT UNSIGNED NOT NULL,
   video_id INT UNSIGNED NOT NULL,
   position INT UNSIGNED
-}
+);
 
 ALTER TABLE playlist_video ADD FOREIGN KEY (playlist_id) REFERENCES playlist(id);
-ALTER TABLE playlist_video ADD FOREIGN KEY (video_id) REFERENCES video_id(id);
+ALTER TABLE playlist_video ADD FOREIGN KEY (video_id) REFERENCES video(id);

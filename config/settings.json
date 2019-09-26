@@ -1,0 +1,36 @@
+{
+  "database": {
+    "username": "root",
+    "password": "rootpassword",
+    "host": "db",
+    "port": "3306",
+    "database": "playlist_demo"
+  },
+  "routing": {
+    "app_index": {
+      "method": "GET",
+      "path": "/",
+      "action": "App\\Controller\\IndexAction"
+    },
+    "app_video_collection_get": {
+      "method": "GET",
+      "path": "/videos",
+      "action": "App\\Controller\\Video\\CollectionGetAction"
+    },
+    "app_video_get": {
+      "method": "GET",
+      "path": "/videos/{id}",
+      "action": "App\\Controller\\Video\\GetAction"
+    },
+    "app_playlist_collection_get": {
+      "method": "GET",
+      "path": "/playlists",
+      "action": "App\\Controller\\Playlist\\CollectionGetAction"
+    },
+    "app_playlist_get": {
+      "method": "GET",
+      "path": "/playlists/{id}",
+      "action": "App\\Controller\\Playlist\\GetAction"
+    }
+  }
+}
