@@ -1,0 +1,15 @@
+{
+  "name": "shengjie/playlist",
+  "description": "An demo php/mysql based playlist api server",
+  "authors": [
+    {
+      "name": "Shengjie YU",
+      "email": "shengjie.yu89@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": ["src/"]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - 8080:80
+    volumes:
+      - ./public:/var/www/public
+      - ./site.conf:/etc/nginx/conf.d/site.conf
+
+  php:
+    build: ./docker/php
+    volumes:
+      - ./public:/var/www/public
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: app
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
