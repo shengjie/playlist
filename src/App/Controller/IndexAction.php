@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use Component\Http\Request;
-use Component\Http\Response;
+use Component\Http\JsonResponse;
+use Component\Routing\Router;
 
 class IndexAction {
 
@@ -17,10 +18,18 @@ class IndexAction {
   }
 
   public function __invoke(Request $request) {
-    return new Response(\json_encode([
+    return [
+      'version' => '1.0',
       'links' => [
-        $this->router->generate('')
+        [
+          'rel' => 'list',
+          'href' => $this->router->generate('app_playlist_collection_get')
+        ],
+        [
+          'rel' => 'list',
+          'href' => $this->router->generate('app_video_collection_get')
+        ],
       ]
-    ]));
+    ];
   }
 }

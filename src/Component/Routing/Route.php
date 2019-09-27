@@ -23,4 +23,8 @@ class Route {
    */
   public $action;
 
+  /**
+   * @var array
+   */
+  public $attributes = [];
 }

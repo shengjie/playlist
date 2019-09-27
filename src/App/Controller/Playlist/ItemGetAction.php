@@ -4,12 +4,11 @@ namespace App\Controller\Playlist;
 
 use Component\Http\JsonResponse;
 use Component\Http\Request;
-use Component\Routing\Router;
+use Component\Http\Response;
+use Component\Http\Exceptions\HttpException;
 use App\Repository\PlaylistRepository;
-use App\Hateoas\PlaylistHateoasResolver;
 
-class CollectionGetAction {
-
+class ItemGetAction {
   /**
    * @var PlaylistRepository
    */
@@ -26,14 +25,20 @@ class CollectionGetAction {
   }
 
   public function __invoke(Request $request) {
-    $playlists = $this->playlistRepository->fetchAll();
-
-    foreach($playlists as $playlist) {
-      $this->playlistHateoasResolver->resolveItem($playlist);
+    $id = (int) ($request->attributes['id'] ?? 0);
+    if ($id <= 0) {
+      throw new HttpException('Invalid request', 400);
     }
 
+    $playlist = $this->playlistRepository->fetch($id);
+    if (null === $playlist) {
+      throw new HttpException('Not found', 404);
+    }
+
+    $this->playlistHateoasResolver->resolveItem($playlist);
+
     return [
-      'data' => $playlists
+      'data' => $playlist
     ];
   }
 }

@@ -35,25 +35,38 @@ class Router {
     $this->routeTable = [];
 
     foreach($routeConfigs as $routeName => $routeConfig) {
-      $route = new Route();
-      $route->name = $routeName;
-      $route->method = $routeConfig['method'] ?? 'ALL';
-      $route->path = $routeConfig['path'];
-      $route->action = $routeConfig['action'];
-      $this->routes[$routeName] = $route;
+      $this->routes[$routeName] = RouteFactory::createFromConfig($routeName, $routeConfig);
     }
 
     $this->buildRouteTable();
   }
 
   public function match(Request $request) {
-    $parts = self::resolvePath($request->method, $request->pathInfo);
-    $args = [];
-    $route = $this->resolve($this->routeTable, $parts, $args);
+    $reqParts = explode('/', $request->method . $request->pathInfo);
+    $route = $this->resolve($this->routeTable, $reqParts);
     if (null === $route) {
-      throw new \RuntimeException('No route match for request');
+      throw new Exceptions\NoRouteFoundException('Not found', 404);
     }
+
+    $args = \array_combine(explode('/', $route->method . $route->path), $reqParts);
+    foreach ($args as $argK => $argV) {
+      if ($argK[0] === '{' && $argK[-1] === '}') {
+        $request->attributes[substr($argK, 1, -1)] = $argV;
+      }
+    }
+
     return $route;
+  }
+
+  public function generate(string $routeName, array $args = []) {
+    $route = $this->routes[$routeName];
+
+    $replaceArgs = [];
+    foreach($args as $argK => $argV) {
+      $replaceArgs['{'.$argK.'}'] = $argV;
+    }
+
+    return strtr($route->path, $replaceArgs);
   }
 
   private function buildRouteTable() {
@@ -71,19 +84,18 @@ class Router {
     }
   }
 
-  private function resolve(array $table, array $parts, array &$args) {
+  private function resolve(array $table, array $parts) {
     if (empty($parts) && isset($table['#'])) {
       return $this->routes[$table['#']];
     }
 
     $part = array_shift($parts);
     if (isset($table[$part])) {
-      return $this->resolve($table[$part], $parts, $args);
+      return $this->resolve($table[$part], $parts);
     }
 
-    if (isset($table['*'])) {
-      $args[] = $part;
-      return $this->resolve($table['*'], $parts, $args);
+    if (!empty($parts) && isset($table['*'])) {
+      return $this->resolve($table['*'], $parts);
     }
 
     return null;

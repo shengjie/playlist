@@ -11,6 +11,11 @@ class Request {
   /**
    * @var string
    */
+  public $requestUri;
+
+  /**
+   * @var string
+   */
   public $pathInfo;
 
   /**

@@ -1,10 +1,8 @@
 {
   "database": {
-    "username": "root",
-    "password": "rootpassword",
-    "host": "db",
-    "port": "3306",
-    "database": "playlist_demo"
+    "username": "user",
+    "password": "userpwd",
+    "dsn": "mysql:dbname=playlist_demo;host=db"
   },
   "routing": {
     "app_index": {
@@ -17,20 +15,50 @@
       "path": "/videos",
       "action": "App\\Controller\\Video\\CollectionGetAction"
     },
-    "app_video_get": {
+    "app_video_item_get": {
       "method": "GET",
       "path": "/videos/{id}",
-      "action": "App\\Controller\\Video\\GetAction"
+      "action": "App\\Controller\\Video\\ItemGetAction"
     },
     "app_playlist_collection_get": {
       "method": "GET",
       "path": "/playlists",
       "action": "App\\Controller\\Playlist\\CollectionGetAction"
     },
-    "app_playlist_get": {
+    "app_playlist_item_get": {
       "method": "GET",
       "path": "/playlists/{id}",
-      "action": "App\\Controller\\Playlist\\GetAction"
+      "action": "App\\Controller\\Playlist\\ItemGetAction"
+    },
+    "app_playlist_item_post": {
+      "method": "POST",
+      "path": "/playlists",
+      "action": "App\\Controller\\Playlist\\ItemPostAction"
+    },
+    "app_playlist_item_put": {
+      "method": "PUT",
+      "path": "/playlists/{id}",
+      "action": "App\\Controller\\Playlist\\ItemPutAction"
+    },
+    "app_playlist_item_delete": {
+      "method": "DELETE",
+      "path": "/playlists/{id}",
+      "action": "App\\Controller\\Playlist\\ItemDeleteAction"
+    },
+    "app_playlist_item_video_collection_get": {
+      "method": "GET",
+      "path": "/playlists/{id}/videos",
+      "action": "App\\Controller\\Playlist\\ItemVideoCollectionGetAction"
+    },
+    "app_playlist_item_video_collection_post": {
+      "method": "POST",
+      "path": "/playlists/{id}/videos",
+      "action": "App\\Controller\\Playlist\\ItemVideoCollectionPostAction"
+    },
+    "app_playlist_item_video_item_delete": {
+      "method": "DELETE",
+      "path": "/playlists/{id}/videos/{vid}",
+      "action": "App\\Controller\\Playlist\\ItemVideoItemDeleteAction"
     }
   }
 }
