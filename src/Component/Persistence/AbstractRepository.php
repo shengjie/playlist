@@ -2,6 +2,9 @@
 
 namespace Component\Persistence;
 
+/**
+ * Base repository class provide some database access helper
+ */
 abstract class AbstractRepository {
   public function __construct(ConnectionFactory $connectionFactory) {
     $this->connectionFactory = $connectionFactory;

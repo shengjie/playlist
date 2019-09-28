@@ -4,7 +4,6 @@ namespace Component\Routing;
 
 class RouteFactory {
 
-
   public static function createFromConfig(string $routeName, array $routeConfig) {
     $route = new Route();
     $route->name = $routeName;

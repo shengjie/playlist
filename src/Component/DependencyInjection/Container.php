@@ -2,6 +2,9 @@
 
 namespace Component\DependencyInjection;
 
+/**
+ * an simple dependency injection container
+ */
 class Container {
 
   private $settings;
@@ -33,7 +36,8 @@ class Container {
     $serviceDefinition = $this->definitions[$serviceId];
     // handle autowire
     if (true === $serviceDefinition) {
-      //autowire
+      // autowire
+      // todo : following section can uses apcu cache to increase speed as reflection is slow
       $refClass = new \ReflectionClass($serviceId);
       $arguments = [];
       $refCtor = $refClass->getConstructor();
@@ -46,11 +50,12 @@ class Container {
       return new $serviceId(...array_map([$this, 'get'], $arguments));
     }
 
-    // handle customized
+    // handle customized service generation
     if (is_callable($serviceDefinition)) {
       return \call_user_func($serviceDefinition, $this);
     }
 
+    // handle configured service generation
     if (is_array($serviceDefinition)) {
       $arguments = $serviceDefinition['arguments'];
       return new $serviceId(...$arguments);

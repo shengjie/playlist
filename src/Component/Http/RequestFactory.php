@@ -18,6 +18,7 @@ class RequestFactory {
     $request->query = $_GET;
     $request->requestUri = $_SERVER['REQUEST_URI'];
     $request->pathInfo = explode('?', $request->requestUri)[0];
+    $request->attributes = [];
     return $request;
   }
 }

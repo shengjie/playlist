@@ -10,7 +10,6 @@ use App\Repository\PlaylistRepository;
 use App\Hateoas\PlaylistHateoasResolver;
 use App\Dto\Playlist;
 
-
 class ItemPutAction {
   /**
    * @var PlaylistRepository

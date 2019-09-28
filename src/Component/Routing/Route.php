@@ -19,12 +19,7 @@ class Route {
   public $method;
 
   /**
-   * @var string
+   * @var string class to handle this action
    */
   public $action;
-
-  /**
-   * @var array
-   */
-  public $attributes = [];
 }

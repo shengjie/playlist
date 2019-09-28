@@ -15,7 +15,7 @@ class Router {
   private $routes;
 
   /**
-   * @var array
+   * @var array The route table is a tree array where every node is word from path info (split by /)
    */
   private $routeTable;
 
@@ -23,7 +23,7 @@ class Router {
     return array_map(
       static function(string $part) {
         if ($part[0] === '{' && $part[-1] === '}') {
-          return '*';
+          return '?';
         }
         return $part;
       },
@@ -96,8 +96,8 @@ class Router {
         return $this->resolve($table[$reqPart], $reqParts);
       }
 
-      if (isset($table['*'])) {
-        return $this->resolve($table['*'], $reqParts);
+      if (isset($table['?'])) {
+        return $this->resolve($table['?'], $reqParts);
       }
     }
 

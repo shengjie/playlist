@@ -3,6 +3,7 @@ services:
   web:
     container_name: PLAYLIST_NGINX
     image: nginx
+    restart: always
     ports:
       - 8080:80
     volumes:
@@ -12,6 +13,7 @@ services:
   php:
     container_name: PLAYLIST_PHP
     build: ./docker/php
+    restart: always
     ports:
       - 9000:9000
     volumes:
