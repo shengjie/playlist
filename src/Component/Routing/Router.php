@@ -48,6 +48,7 @@ class Router {
       throw new Exceptions\NoRouteFoundException('Not found', 404);
     }
 
+    $request->attributes['_route'] = $route->name;
     $args = \array_combine(explode('/', $route->method . $route->path), $reqParts);
     foreach ($args as $argK => $argV) {
       if ($argK[0] === '{' && $argK[-1] === '}') {
@@ -84,18 +85,20 @@ class Router {
     }
   }
 
-  private function resolve(array $table, array $parts) {
-    if (empty($parts) && isset($table['#'])) {
-      return $this->routes[$table['#']];
-    }
+  private function resolve(array $table, array $reqParts) {
+    if (empty($reqParts)) {
+      if (isset($table['#'])) {
+        return $this->routes[$table['#']];
+      }
+    } else {
+      $reqPart = array_shift($reqParts);
+      if (isset($table[$reqPart])) {
+        return $this->resolve($table[$reqPart], $reqParts);
+      }
 
-    $part = array_shift($parts);
-    if (isset($table[$part])) {
-      return $this->resolve($table[$part], $parts);
-    }
-
-    if (!empty($parts) && isset($table['*'])) {
-      return $this->resolve($table['*'], $parts);
+      if (isset($table['*'])) {
+        return $this->resolve($table['*'], $reqParts);
+      }
     }
 
     return null;

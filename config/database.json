@@ -1,0 +1,5 @@
+{
+  "username": "user",
+  "password": "userpwd",
+  "dsn": "mysql:dbname=playlist_demo;host=db"
+}

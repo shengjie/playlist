@@ -4,7 +4,14 @@ namespace Component\Http;
 
 class JsonResponseFactory {
   public function createFromActionResult(Request $request, $actionResult): Response {
-    return new Response(json_encode($actionResult), 200, [
+
+    $statusCode = 200;
+    if (isset($actionResult['_statusCode'])) {
+      $statusCode = $actionResult['_statusCode'];
+      unset($actionResult['_statusCode']);
+    }
+
+    return new Response(json_encode($actionResult), $statusCode, [
       'Content-Type' => 'application/json'
     ]);
   }

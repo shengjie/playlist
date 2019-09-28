@@ -42,13 +42,18 @@ class Container {
           $arguments[] = (string) $parameter->getType();
         }
       }
-      
+
       return new $serviceId(...array_map([$this, 'get'], $arguments));
     }
 
     // handle customized
     if (is_callable($serviceDefinition)) {
       return \call_user_func($serviceDefinition, $this);
+    }
+
+    if (is_array($serviceDefinition)) {
+      $arguments = $serviceDefinition['arguments'];
+      return new $serviceId(...$arguments);
     }
 
     // handle alias

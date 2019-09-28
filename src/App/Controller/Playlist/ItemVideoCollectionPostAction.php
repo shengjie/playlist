@@ -63,12 +63,14 @@ class ItemVideoCollectionPostAction {
     } catch(\PDOException $e) {
       if ('23000' === $e->getCode()) {
         // duplicated primary key
-        throw new HttpException('Video already present in target playlist', 409);
+        throw new HttpException('Video already present in target playlist', 400);
       } else {
         throw $e;
       }
     }
 
-    return [];
+    return [
+      '_statusCode' => 204
+    ];
   }
 }

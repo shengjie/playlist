@@ -14,4 +14,13 @@ abstract class AbstractRepository {
   protected function prepare(string $sql) {
     return $this->getConnection()->prepare($sql);
   }
+
+  protected function exec(string $sql, array $argments = []): \PDOStatement {
+    $stmt = $this->getConnection()->prepare($sql);
+    foreach($argments as $argK => $argV) {
+      $stmt->bindValue($argK, $argV);
+    }
+    $stmt->execute();
+    return $stmt;
+  }
 }

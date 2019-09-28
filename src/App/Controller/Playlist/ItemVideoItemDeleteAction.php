@@ -46,8 +46,12 @@ class ItemVideoItemDeleteAction {
       throw new HttpException('Video not found', 404);
     }
 
-    $this->playlistRepository->removeVideo($id, $videoId);
+    if (!$this->playlistRepository->removeVideo($id, $videoId)) {
+      throw new HttpException('Video not exists in playlist', 400);
+    }
 
-    return [];
+    return [
+      '_statusCode' => 204
+    ];
   }
 }

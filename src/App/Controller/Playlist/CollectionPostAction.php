@@ -11,20 +11,14 @@ use App\Hateoas\PlaylistHateoasResolver;
 use App\Dto\Playlist;
 
 
-class ItemPostAction {
+class CollectionPostAction {
   /**
    * @var PlaylistRepository
    */
   private $playlistRepository;
 
-  /**
-   * @var PlaylistHateoasResolver
-   */
-  private $playlistHateoasResolver;
-
-  public function __construct(PlaylistRepository $playlistRepository, PlaylistHateoasResolver $playlistHateoasResolver) {
+  public function __construct(PlaylistRepository $playlistRepository) {
     $this->playlistRepository = $playlistRepository;
-    $this->playlistHateoasResolver = $playlistHateoasResolver;
   }
 
   public function __invoke(Request $request) {
@@ -40,10 +34,10 @@ class ItemPostAction {
     $playlist = $this->playlistRepository->create([
       'name' => $request->post['name']
     ]);
-    $this->playlistHateoasResolver->resolveItem($playlist);
 
     return [
-      'data' => $playlist
+      'data' => $playlist,
+      '_statusCode' => 201
     ];
   }
 }

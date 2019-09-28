@@ -17,14 +17,8 @@ class ItemPutAction {
    */
   private $playlistRepository;
 
-  /**
-   * @var PlaylistHateoasResolver
-   */
-  private $playlistHateoasResolver;
-
-  public function __construct(PlaylistRepository $playlistRepository, PlaylistHateoasResolver $playlistHateoasResolver) {
+  public function __construct(PlaylistRepository $playlistRepository) {
     $this->playlistRepository = $playlistRepository;
-    $this->playlistHateoasResolver = $playlistHateoasResolver;
   }
 
   public function __invoke(Request $request) {
@@ -49,7 +43,6 @@ class ItemPutAction {
     $playlist = $this->playlistRepository->update($id, [
       'name' => $request->post['name']
     ]);
-    $this->playlistHateoasResolver->resolveItem($playlist);
 
     return [
       'data' => $playlist

@@ -31,6 +31,8 @@ class ItemDeleteAction {
 
     $this->playlistRepository->remove($id);
 
-    return [];
+    return [
+      '_statusCode' => 204
+    ];
   }
 }

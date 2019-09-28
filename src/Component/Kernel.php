@@ -7,7 +7,7 @@ use Component\Http\ResponseFactory;
 use Component\DependencyInjection\Container;
 
 class Kernel {
-  private $container;
+  protected $container;
 
   public function __construct(array $definitions, array $settings) {
     $this->container = new Container($definitions, $settings);
@@ -15,16 +15,21 @@ class Kernel {
 
   public function handle(Request $request) {
     $router = $this->container->get('router');
-    $responseFactory = $this->container->get('response_factory');
     try {
       $route = $router->match($request);
       $action = $this->container->get($route->action);
       $actionResult = $action->__invoke($request);
-      $response = $responseFactory->createFromActionResult($request, $actionResult);
-      return $response;
+      return $this->generateResponse($request, $actionResult);
     } catch(\Exception $e) {
+      $responseFactory = $this->container->get('response_factory');
       \error_log((string) $e, 0);
       return $responseFactory->createFromException($request, $e);
     }
+  }
+
+  protected function generateResponse(Request $request, array $actionResult) {
+    $responseFactory = $this->container->get('response_factory');
+    $response = $responseFactory->createFromActionResult($request, $actionResult);
+    return $response;
   }
 }

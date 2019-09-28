@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Controller\Playlist;
+namespace App\Controller\Video;
 
 use Component\Http\JsonResponse;
 use Component\Http\Request;
 use Component\Http\Response;
 use Component\Http\Exceptions\HttpException;
-use App\Repository\PlaylistRepository;
+use App\Repository\VideoRepository;
 
 class ItemGetAction {
   /**
-   * @var PlaylistRepository
+   * @var VideoRepository
    */
-  private $playlistRepository;
+  private $videoRepository;
 
-  public function __construct(PlaylistRepository $playlistRepository) {
-    $this->playlistRepository = $playlistRepository;
+  public function __construct(VideoRepository $videoRepository) {
+    $this->videoRepository = $videoRepository;
   }
 
   public function __invoke(Request $request) {
@@ -24,13 +24,13 @@ class ItemGetAction {
       throw new HttpException('Invalid request', 400);
     }
 
-    $playlist = $this->playlistRepository->fetch($id);
-    if (null === $playlist) {
+    $video = $this->videoRepository->fetch($id);
+    if (null === $video) {
       throw new HttpException('Not found', 404);
     }
 
     return [
-      'data' => $playlist
+      'data' => $video
     ];
   }
 }

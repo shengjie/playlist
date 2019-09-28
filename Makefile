@@ -1,9 +1,9 @@
 
 build:
-	docker run --rm --volume $PWD:/app composer install
+	docker run --rm --volume $(CURDIR):/usr/src -w /usr/src composer install
 	docker-compose build
-	
-run:
+
+run: build
 	docker-compose up
 
 clean:

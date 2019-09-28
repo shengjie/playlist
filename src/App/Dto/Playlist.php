@@ -23,18 +23,12 @@ class Playlist {
    */
   public $updated_at;
 
-  /**
-   * @var string[]
-   */
-  public $links;
-
   public static function fromDbResult(array $dbResult): self {
     $playlist = new self();
     $playlist->id = (int) $dbResult['id'];
     $playlist->name = $dbResult['name'];
     $playlist->created_at = $dbResult['created_at'];
     $playlist->updated_at = $dbResult['created_at'];
-    $playlist->links = [];
 
     return $playlist;
   }
