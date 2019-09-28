@@ -16,7 +16,7 @@ make build && make run
 
 
 | Method | URL | Post | Description |
-|---|---|---|
+|---|---|---|---|
 | GET | /videos  | - | Get all videos |
 | GET | /videos/{id} | - | Get detail of one video |
 | GET | /playlists  | - | Get all playlists |
