@@ -1,7 +1,7 @@
 # Playlist demo
 This is a simple playlist REST api demo based on php/mysql
 
-# Usage
+# Setup
 
 * Notice: this demo requires `docker` and `docker-compose`.
 
