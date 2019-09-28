@@ -9,4 +9,4 @@ make build && make run
 
 You can then navigate to http://php-docker.local:8080/test.html to testing api behavoir
 
-To manage database, please visit http://localhost:8000/ 
+To manage database, please visit http://localhost:8000/ (username: root, password: rootpassword)
