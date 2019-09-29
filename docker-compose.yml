@@ -8,7 +8,7 @@ services:
       - 8080:80
     volumes:
       - ./public:/var/www/public:ro
-      - ./docker/nginx/site.conf:/etc/nginx/conf.d/site.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
 
   php:
     container_name: PLAYLIST_PHP
@@ -32,11 +32,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpwd
     volumes:
-      - ./docker/mysql:/docker-entrypoint-initdb.d
+      - ./docker/mysql:/docker-entrypoint-initdb.d:ro
 
   adminer:
     container_name: PLAYLIST_ADMINER
     image: adminer
     restart: always
     ports:
-      - 8000:8080
+      - 8081:8080

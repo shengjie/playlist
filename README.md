@@ -9,9 +9,8 @@ This is a simple playlist REST api demo based on php/mysql
 ```
 make build && make run
 ```
-* You need to add `php-docker.local 127.0.0.1` to your hosts file.
-* After all containers are started, You can then navigate to http://php-docker.local:8080/test.html to testing api behavoir in browser.
-* To manage database, please visit http://localhost:8000/ (username: root, password: rootpassword)
+* After all containers are started, You can then navigate to http://localhost:8080/test.html to testing api behavoir in browser.
+* To manage database, please visit http://localhost:8081/ (username: root, password: rootpassword)
 
 # Endpoints
 

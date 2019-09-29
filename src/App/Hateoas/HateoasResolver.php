@@ -57,6 +57,9 @@ class HateoasResolver {
     if (0 === strpos($request->attributes['_route'], 'app_playlist_item_video_collection_')) {
       $actionResult['_links'][] = ['rel' => 'list', 'href' => $this->router->generate('app_playlist_item_video_collection_get', ['id' => $id]), 'type' => 'GET'];
       $actionResult['_links'][] = ['rel' => 'edit', 'href' => $this->router->generate('app_playlist_item_video_collection_post', ['id' => $id]), 'type' => 'POST'];
+    }
+
+    if (0 === strpos($request->attributes['_route'], 'app_playlist_item_video_collection_get')) {
       foreach($actionResult['data'] as $video) {
         $video->_links[] = ['rel' => 'remove', 'href' => $this->router->generate('app_playlist_item_video_item_delete', ['id' => $id, 'vid' => $video->id]), 'type' => 'DELETE'];
       }

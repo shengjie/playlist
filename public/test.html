@@ -1,101 +1,109 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Test API</title>
-  </head>
-  <body>
-    <ul>
-      <li>
-        <button type="button" data-url="/videos" data-method="GET">GET /videos</button>
-      </li>
-      <li>
-        <button type="button" data-url="/videos/{id}" data-method="GET">GET /videos/{id}</button>
-        <input type="text" name="id" value='1' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists" data-method="GET">GET /playlists</button>
-      </li>
-      <li>
-        <button type="button" data-url="/playlists/{id}" data-method="GET">GET /playlists/{id}</button>
-        <input type="text" name="id" value='1' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists/{id}/videos" data-method="GET">GET /playlists/{id}/videos</button>
-        <input type="text" name="id" value='1' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists/{id}/videos" data-method="POST">POST /playlists/{id}/videos</button>
-        <input type="text" name="id" value='1' />
-        <input type="text" name="data" value='{"video_id":2, "position":2}' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists/{id}/videos/{vid}" data-method="DELETE">DELETE /playlists/{id}/videos/{vid}</button>
-        <input type="text" name="id" value='1' />
-        <input type="text" name="vid" value='1' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists/{id}" data-method="PUT">PUT /playlists/{id}</button>
-        <input type="text" name="id" value='1' />
-        <input type="text" name="data" value='{"name":"toto"}' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists" data-method="POST">POST /playlists</button>
-        <input type="text" name="data" value='{"name":"toto"}' />
-      </li>
-      <li>
-        <button type="button" data-url="/playlists/{id}" data-method="DELETE">DELETE /playlists</button>
-        <input type="text" name="id" value='1' />
-      </li>
-    </ul>
-    <textarea id="result" style="font-family: monospace;width:100%;white-space: pre-wrap;" rows=30>
-    </textarea>
-  </body>
-  <script>
+<head>
+  <meta charset="utf-8">
+  <title>Test API</title>
+</head>
+<body>
+  <table>
+    <tbody>
+      <tr>
+        <td><button type="button" data-url="/videos" data-method="GET">GET /videos</button></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/videos/{id}" data-method="GET">GET /videos/{id}</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists" data-method="GET">GET /playlists</button></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists/{id}" data-method="GET">GET /playlists/{id}</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists/{id}/videos" data-method="GET">GET /playlists/{id}/videos</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists/{id}/videos" data-method="POST">POST /playlists/{id}/videos</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+        <td>post: <input type="text" name="data" value='{"video_id":2, "position":2}' /></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists/{id}/videos/{vid}" data-method="DELETE">DELETE /playlists/{id}/videos/{vid}</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+        <td>vid: <input type="text" name="vid" value='1' /></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists/{id}" data-method="PUT">PUT /playlists/{id}</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+        <td>post: <input type="text" name="data" value='{"name":"toto"}' /></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists" data-method="POST">POST /playlists</button></td>
+        <td>post: <input type="text" name="data" value='{"name":"toto"}' /></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><button type="button" data-url="/playlists/{id}" data-method="DELETE">DELETE /playlists</button></td>
+        <td>id: <input type="text" name="id" value='1' /></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <textarea id="result" style="font-family: monospace;width:100%;white-space: pre-wrap;background: #f0f0f0" rows=30>
+  </textarea>
+</body>
+<script>
 
-  function handleButtonClick(e) {
-    var btn = e.target;
-    var container = btn.parentElement;
-    var url = btn.dataset.url;
+function handleButtonClick(e) {
+  var btn = e.target;
+  var container = btn.parentElement.parentElement; // goes to tr element
+  var url = btn.dataset.url;
 
-    var inputs = container.querySelectorAll('input');
-    var datas = {};
-    for(var i=0;i<inputs.length;i++) {
-      datas[inputs[i].name] = inputs[i].value;
-    }
-
-    if (datas['id']) {
-      url = url.replace('{id}', datas['id']);
-    }
-    if (datas['vid']) {
-      url = url.replace('{vid}', datas['vid']);
-    }
-
-    var method = btn.dataset.method;
-    var data = datas['data'] || null;
-
-    document.getElementById('result').value = 'request ' + method + ' ' + url;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.send(data);
-    xhr.onload = function() {
-      var responseData;
-      try {
-        responseData = JSON.parse(this.response);
-        responseData = JSON.stringify(responseData, undefined, 4);
-      }catch(e) {
-        console.error(e);
-        responseData = this.response;
-      }
-      document.getElementById('result').value = this.status + ' ' + this.statusText + '\n' +  responseData;
-    }
+  var inputs = container.querySelectorAll('input');
+  var datas = {};
+  for(var i=0;i<inputs.length;i++) {
+    datas[inputs[i].name] = inputs[i].value;
   }
 
-    var buttons = document.querySelectorAll('button');
-    for(var i=0;i<buttons.length;i++) {
-      var button = buttons[i];
-      button.addEventListener('click', handleButtonClick);
+  if (datas['id']) {
+    url = url.replace('{id}', datas['id']);
+  }
+  if (datas['vid']) {
+    url = url.replace('{vid}', datas['vid']);
+  }
+
+  var method = btn.dataset.method;
+  var data = datas['data'] || null;
+
+  document.getElementById('result').value = 'request ' + method + ' ' + url;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url);
+  xhr.send(data);
+  xhr.onload = function() {
+    var responseData;
+    try {
+      responseData = JSON.parse(this.response);
+      responseData = JSON.stringify(responseData, undefined, 4);
+    }catch(e) {
+      console.error(e);
+      responseData = this.response;
     }
-  </script>
+    document.getElementById('result').value = this.status + ' ' + this.statusText + '\n' +  responseData;
+  }
+}
+
+var buttons = document.querySelectorAll('button');
+for(var i=0;i<buttons.length;i++) {
+  var button = buttons[i];
+  button.addEventListener('click', handleButtonClick);
+}
+</script>
 </html>
