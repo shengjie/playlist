@@ -51,38 +51,60 @@ class PlaylistRepository extends AbstractRepository {
     return $stmt->rowCount() > 0;
   }
 
-  public function addVideo(int $id, int $videoId, ?int $position): void {
-    $this->exec('INSERT INTO playlist_video (playlist_id, video_id, created_at, position)
-SELECT ?, ?, NOW(), ?', [
-  1 => $id,
-  2 => $videoId,
-  3 => $position ?? PHP_INT_MAX
-]);
-    $this->rebuildPosition($id);
+  public function addVideo(int $id, int $videoId, ?int $position): bool {
+    $count = (int) $this->exec('SELECT count(*) FROM playlist_video WHERE playlist_id = ? AND video_id = ?', [
+      1 => $id,
+      2 => $videoId
+    ])->fetchColumn();
+
+    // video already exists
+    if ($count > 0) {
+      return false;
+    }
+
+    $maxPosition = (int) $this->exec('SELECT max(position) FROM playlist_video WHERE playlist_id = ?', [
+      1 => $id
+    ])->fetchColumn();
+
+    $position = min($position, $maxPosition + 1);
+
+    // shift position
+    $this->exec('UPDATE playlist_video SET position = position + 1 WHERE playlist_id = ? AND position > ?', [
+      1 => $id,
+      2 => $position
+    ]);
+
+    // add video
+    $this->exec('INSERT INTO playlist_video (playlist_id, video_id, created_at, position) VALUES (?, ?, NOW(), ?)', [
+      1 => $id,
+      2 => $videoId,
+      3 => $position
+    ]);
+
+    return true;
   }
 
   public function removeVideo(int $id, int $videoId): bool {
-    $stmt = $this->exec('DELETE FROM playlist_video WHERE playlist_id = ? AND video_id = ?', [
+    $position = (int) $this->exec('SELECT position FROM playlist_video WHERE playlist_id = ? AND video_id = ?', [
+      1 => $id,
+      2 => $videoId
+    ])->fetchColumn();
+
+    if ($position === 0) {
+      // video not exists in playlist_video
+      return false;
+    }
+
+    $this->exec('DELETE FROM playlist_video WHERE playlist_id = ? AND video_id = ?', [
       1 => $id,
       2 => $videoId
     ]);
-    $success = $stmt->rowCount() > 0;
-    if ($success) {
-      $this->rebuildPosition($id);
-    }
-    return $success;
-  }
 
-  public function rebuildPosition(int $id) {
-    $stmt = $this->exec('UPDATE playlist_video pv2
-INNER JOIN (
- SELECT
- _pv.playlist_id,
- _pv.video_id,
- ROW_NUMBER() OVER (PARTITION BY _pv.playlist_id ORDER BY _pv.position ASC, _pv.created_at DESC) AS position
- FROM playlist_video _pv
- WHERE _pv.playlist_id = ?
-) pv ON pv.playlist_id = pv2.playlist_id AND pv2.video_id = pv.video_id
-SET pv2.position = pv.position', [1 => $id]);
+    $this->exec('UPDATE playlist_video SET position = position - 1 WHERE playlist_id = ? AND position > ?',  [
+      1 => $id,
+      2 => $position
+    ]);
+
+    return true;
   }
 }

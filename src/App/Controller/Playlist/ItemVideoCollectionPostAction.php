@@ -58,15 +58,9 @@ class ItemVideoCollectionPostAction {
       throw new HttpException('invalid post data: video_id', 400);
     }
 
-    try {
-      $this->playlistRepository->addVideo($id, $videoId, $position);
-    } catch(\PDOException $e) {
-      if ('23000' === $e->getCode()) {
-        // duplicated primary key
-        throw new HttpException('Video already present in target playlist', 400);
-      } else {
-        throw $e;
-      }
+
+    if (!$this->playlistRepository->addVideo($id, $videoId, $position)) {
+      throw new HttpException('Video already present in target playlist', 400);
     }
 
     return [
